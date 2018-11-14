@@ -1,0 +1,189 @@
+alias: a
+environments:
+  default:
+    integrationserver-default.common-jms-cloud_demo_jms.jms.password: '{AES/CBC/PKCS5Padding}{6174nVdQ9PHHAxQRHHqfl/OZs4yxtwJcdUYk1TO8RPk=}{nv5z4pPBJnKYx7QfxMyxxw==}SGY47hxXPEP/Qsjz9wwZHw=='
+    integrationserver-default.common-jms-cloud_demo_jms.jms.user: bbdalai
+    integrationserver-default.common-jndi-cloud_demo_jdni.jndi.provider.password: '{AES/CBC/PKCS5Padding}{P7t/KAw4npcmwImYpOqjs9LwC8281Sg800KEXOv4tUI=}{xsdwyG0LcJa+1l2zjf7ckQ==}0DdbkyogQis7q9E46U02qA=='
+    integrationserver-default.common-jndi-cloud_demo_jdni.jndi.provider.url: nsp://vmdbvt05:9000/
+    integrationserver-default.common-jndi-cloud_demo_jdni.jndi.provider.user: bbdalai
+    integrationserver-default.common-keystores_default_is_keystore.keystore.key.password: '{AES/CBC/PKCS5Padding}{YtfzjRvTq9Z9EtT1FoFBzFrMpSY9+XfVREA6Rp7uEUs=}{Bf6G5ugoXHS1TBZLUo0x1Q==}KypnhuTBbmQ3KYjzzxhLgg=='
+    integrationserver-default.common-keystores_default_is_keystore.keystore.location: ../../../common/conf/keystore.jks
+    integrationserver-default.common-keystores_default_is_keystore.keystore.password: '{AES/CBC/PKCS5Padding}{xDlgnFhgOGzYC5EqNpScMlsX8kmQmIfKIO03t9mDjmw=}{smlNj75aqsoa4HTufgveaw==}gbP4AHhL8731xR3zAtlVMw=='
+    integrationserver-default.common-keystores_default_is_keystore.keystore.type: JKS
+    integrationserver-default.common-keystores_partner1_ks1.keystore.location: packages/mytruststore/config/secrets/partner1_ks1
+    integrationserver-default.common-keystores_partner1_ks1.keystore.password: '{AES/CBC/PKCS5Padding}{/80C/YUHEMj5/NOFXn/9xX7nVappPqUQmO3g+hkKOiM=}{0FHG80KIk+WzWmJPM7MRJw==}VAcPELBP/ixK1vyH45FYIw=='
+    integrationserver-default.common-keystores_partner1_ks1.keystore.type: JKS
+    integrationserver-default.is-resources.resources.serverthreadpool.availablethreadswarningthreshold: '15'
+    integrationserver-default.is-resources.resources.serverthreadpool.maximumthreads: '75'
+    integrationserver-default.is-resources.resources.serverthreadpool.minimumthreads: '10'
+    integrationserver-default.is-resources.resources.serverthreadpool.schedulerthreadthrottle: '75'
+    integrationserver-default.is-resources.resources.session.availablestatefulsessionwarningthreshold: '25'
+    integrationserver-default.is-resources.resources.session.enablestatefulsessionlimit: 'true'
+    integrationserver-default.is-resources.resources.session.maximumstatefulsessions: '2147483647'
+    integrationserver-default.is-resources.resources.session.sessiontimeout: '10'
+    integrationserver-default.is-resources.storesettings.brokerconfigured: 'false'
+    integrationserver-default.is-resources.storesettings.defaultdocumentstore.initialstoresize: '25'
+    integrationserver-default.is-resources.storesettings.defaultdocumentstore.storelocation: DocumentStore
+    integrationserver-default.is-resources.storesettings.triggerdocumentstore.initialstoresize: '35'
+    integrationserver-default.is-resources.storesettings.triggerdocumentstore.storelocation: DocumentStore
+    integrationserver-default.is-resources.storesettings.triggerdocumentstore.user: Administrator
+    integrationserver-default.is-resources.storesettings.xarecoverystore.initialstoresize: '10'
+    integrationserver-default.is-resources.storesettings.xarecoverystore.storelocation: XAStore
+layers:
+  a-layer:
+    templates: a-template
+provision:
+  default:
+    a-layer: ${nodes}
+templates:
+  a-template:
+    products:
+      integrationServer:
+        default:
+          configuration:
+            integrationServer-default:
+              IS-ACLS:
+                IS-ACLS-test_invdu_ACL:
+                  '@name': test_invdu_ACL
+                  Allow:
+                    Group: local/Administrators
+                  Deny: null
+                  ExtendedProperties:
+                    Property:
+                    - '@name': ResultingLocalUsers
+                      $: test_user_invdu,Administrator
+              IS-RESOURCES:
+                IS-RESOURCES:
+                  Resources:
+                    ServerThreadPool:
+                      MaximumThreads: ${integrationserver-default.is-resources.resources.serverthreadpool.maximumthreads}
+                      MinimumThreads: ${integrationserver-default.is-resources.resources.serverthreadpool.minimumthreads}
+                      AvailableThreadsWarningThreshold: ${integrationserver-default.is-resources.resources.serverthreadpool.availablethreadswarningthreshold}
+                      SchedulerThreadThrottle: ${integrationserver-default.is-resources.resources.serverthreadpool.schedulerthreadthrottle}
+                    Session:
+                      SessionTimeout: ${integrationserver-default.is-resources.resources.session.sessiontimeout}
+                      EnableStatefulSessionLimit: ${integrationserver-default.is-resources.resources.session.enablestatefulsessionlimit}
+                      MaximumStatefulSessions: ${integrationserver-default.is-resources.resources.session.maximumstatefulsessions}
+                      AvailableStatefulSessionWarningThreshold: ${integrationserver-default.is-resources.resources.session.availablestatefulsessionwarningthreshold}
+                  StoreSettings:
+                    DefaultDocumentStore:
+                      StoreLocation: ${integrationserver-default.is-resources.storesettings.defaultdocumentstore.storelocation}
+                      InitialStoreSize: ${integrationserver-default.is-resources.storesettings.defaultdocumentstore.initialstoresize}
+                      Capacity: ${integrationserver-default.is-resources.storesettings.defaultdocumentstore.capacity}
+                      RefillLevel: ${integrationserver-default.is-resources.storesettings.defaultdocumentstore.refilllevel}
+                    TriggerDocumentStore:
+                      StoreLocation: ${integrationserver-default.is-resources.storesettings.triggerdocumentstore.storelocation}
+                      InitialStoreSize: ${integrationserver-default.is-resources.storesettings.triggerdocumentstore.initialstoresize}
+                      User: ${integrationserver-default.is-resources.storesettings.triggerdocumentstore.user}
+                      InboundDocumentHistory: ${integrationserver-default.is-resources.storesettings.triggerdocumentstore.inbounddocumenthistory}
+                      InboundClientSideQueuing: ${integrationserver-default.is-resources.storesettings.triggerdocumentstore.inboundclientsidequeuing}
+                    OutboundDocumentStore: null
+                    XARecoverystore:
+                      StoreLocation: ${integrationserver-default.is-resources.storesettings.xarecoverystore.storelocation}
+                      InitialStoreSize: ${integrationserver-default.is-resources.storesettings.xarecoverystore.initialstoresize}
+                    BrokerConfigured: ${integrationserver-default.is-resources.storesettings.brokerconfigured}
+              COMMON-JMS:
+                COMMON-JMS-CLOUD_DEMO_JMS:
+                  JMS:
+                    '@alias': CLOUD_DEMO_JMS
+                    Description: CLOUD_DEMO_JMS
+                    Enabled: 'false'
+                    TransactionType: NO_TRANSACTION
+                    ClientId: ''
+                    Provider:
+                      '@type': JNDI
+                      JNDIAlias: CLOUD_DEMO_JDNI
+                      JNDIConnectionFactoryName: CLOUD_DEMO_CF
+                      URL: ${integrationserver-default.common-jms-cloud_demo_jms.jms.provider.url}
+                    User: ${integrationserver-default.common-jms-cloud_demo_jms.jms.user}
+                    Password: ${integrationserver-default.common-jms-cloud_demo_jms.jms.password}
+                    MaxRetryAttempts: '0'
+                    RetryInterval: '1000'
+                    Caching: DISABLED
+                    ExtendedProperties:
+                      Property:
+                      - '@name': jndi_connectionFactoryUpdateType
+                        $: NONE
+                      - '@name': jndi_connectionFactoryPollingInterval
+                        $: '0'
+                      - '@name': jndi_enableFollowTheMaster
+                        $: 'true'
+                      - '@name': classLoader
+                        $: INTEGRATION_SERVER
+                      - '@name': csqSize
+                        $: '-1'
+                      - '@name': csqDrainInOrder
+                        $: 'true'
+                      - '@name': optTempQueueCreate
+                        $: 'true'
+                      - '@name': allowReplyToConsumer
+                        $: 'false'
+                      - '@name': manageDestinations
+                        $: 'true'
+                      - '@name': allowNewConnectionPerTrigger
+                        $: 'false'
+              COMMON-KEYSTORES:
+                COMMON-KEYSTORES_DEFAULT_IS_KEYSTORE:
+                  Keystore:
+                    '@alias': DEFAULT_IS_KEYSTORE
+                    Description: Default keystore alias for Integration Server.
+                    Type: ${integrationserver-default.common-keystores_default_is_keystore.keystore.type}
+                    Provider: SUN
+                    Location: ${integrationserver-default.common-keystores_default_is_keystore.keystore.location}
+                    Password: ${integrationserver-default.common-keystores_default_is_keystore.keystore.password}
+                    HSMBased: 'false'
+                    Key:
+                      '@alias': ssos
+                      Password: ${integrationserver-default.common-keystores_default_is_keystore.keystore.key.password}
+                    ExtendedProperties:
+                      Property:
+                      - '@name': isLoaded
+                        $: 'true'
+                COMMON-KEYSTORES_partner1_ks1:
+                  Keystore:
+                    '@alias': partner1_ks1
+                    Description: partner1_ks1
+                    Type: ${integrationserver-default.common-keystores_partner1_ks1.keystore.type}
+                    Provider: SUN
+                    Location: ${integrationserver-default.common-keystores_partner1_ks1.keystore.location}
+                    Password: ${integrationserver-default.common-keystores_partner1_ks1.keystore.password}
+                    HSMBased: 'false'
+                    Key:
+                    - '@alias': pk1
+                      Password: ''
+                    - '@alias': self
+                      Password: ''
+                    - '@alias': webm test ca
+                      Password: ''
+                    ExtendedProperties:
+                      Property:
+                      - '@name': isLoaded
+                        $: 'true'
+              COMMON-JNDI:
+                COMMON-JNDI-CLOUD_DEMO_JDNI:
+                  JNDI:
+                    '@alias': CLOUD_DEMO_JDNI
+                    Description: CLOUD_DEMO_JDNI
+                    Provider:
+                      URL: ${integrationserver-default.common-jndi-cloud_demo_jdni.jndi.provider.url}
+                      InitialContextFactory: com.pcbsys.nirvana.nSpace.NirvanaContextFactory
+                      User: ${integrationserver-default.common-jndi-cloud_demo_jdni.jndi.provider.user}
+                      Password: ${integrationserver-default.common-jndi-cloud_demo_jdni.jndi.provider.password}
+              COMMON-LOCAL-USERS:
+                COMMON-LOCAL-USERS-test_user_invdu:
+                  '@id': test_user_invdu
+                  Enabled: 'true'
+                  ExtendedProperties:
+                    Property:
+                    - '@name': AllowDigestAuthentication
+                      $: 'false'
+                    - '@name': Groups
+                      $: Administrators,Everybody,test_group_invdu
+                  Password: ${integrationserver-default.common-local-users-test_user_invdu.password}
+              IS-GROUPS:
+                IS-GROUPS-test_group_invdu:
+                  '@name': test_group_invdu
+                  Members:
+                    User:
+                    - Administrator
+                    - test_user_invdu
